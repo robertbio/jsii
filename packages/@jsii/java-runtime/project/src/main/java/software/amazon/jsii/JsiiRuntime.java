@@ -77,12 +77,17 @@ public final class JsiiRuntime {
     @Nullable
     private final String customRuntime;
 
-    /** The value of the JSII_NODE environment variable */
+    /** The value of the JSII_NODE property or environment variable */
     @Nullable
     private final String customNode;
 
     public JsiiRuntime() {
-        this(System.getenv("JSII_RUNTIME"), System.getenv("JSII_NODE"));
+        // Try system property first, fall back to environment variable
+        String nodeValue = System.getProperty("jsii.node");
+        if (nodeValue == null) {
+            nodeValue = System.getenv("JSII_NODE");
+        }
+        this(System.getenv("JSII_RUNTIME"), nodeValue);
     }
 
     @VisibleForTesting
